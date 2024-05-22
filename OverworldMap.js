@@ -9,12 +9,20 @@ class OverworldMap {
         this.upperImage.src = config.upperSrc;
     }
 
-    drawLowerImage(ctx)  {
-        ctx.drawImage(this.lowerImage, 0, 0);
+    drawLowerImage(ctx, cameraPerson)  {
+        ctx.drawImage(
+            this.lowerImage, 
+            utils.withGrid(10.5) - cameraPerson.x,
+            utils.withGrid(6) - cameraPerson.y
+        );
     }
 
-    drawUpperImage(ctx)  {
-        ctx.drawImage(this.upperImage, 0, 0)
+    drawUpperImage(ctx, cameraPerson)  {
+        ctx.drawImage(
+            this.upperImage, 
+            utils.withGrid(10.5) - cameraPerson.x,
+            utils.withGrid(6) - cameraPerson.y
+        );
     }
 }
 
@@ -42,20 +50,20 @@ window.OverworldMaps = {
         upperSrc: "/images/maps/KitchenUpper.png",
         gameObjects: {
             hero: new GameObject({
-                x: 3,
-                y: 5,
+                x: utils.withGrid(4),
+                y: utils.withGrid(5),
                 src: "/images/characters/people/hero.png"
             }),
             npcA: new GameObject({
-                x: 9,
-                y: 6,
+                x: utils.withGrid(3),
+                y: utils.withGrid(7),
                 src: "/images/characters/people/npc2.png"
             }),
-            npcB: new GameObject({
-                x: 10,
-                y: 8,
-                src: "/images/characters/people/npc3.png"
-            })
+            //npcB: new GameObject({
+            //    x: 10,
+            //    y: 8,
+            //    src: "/images/characters/people/npc3.png"
+            //})
         }
     },
 }

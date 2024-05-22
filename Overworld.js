@@ -11,17 +11,27 @@ class Overworld {
         const step = () => {
             // clear the canvas so we don't have previous images showing after each frame
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            // draw lower image
-            this.map.drawLowerImage(this.ctx);
-            // draw game objects
+
+            // establish camera person
+            const cameraPerson = this.map.gameObjects.hero;
+
+            // update all objects
             Object.values(this.map.gameObjects).forEach(object => {
                 object.update({
                     arrow: this.directionInput.direction
                 })
-                object.sprite.draw(this.ctx);
             })
+
+            // draw lower image
+            this.map.drawLowerImage(this.ctx, cameraPerson);
+
+            // draw game objects
+            Object.values(this.map.gameObjects).forEach(object => {
+                object.sprite.draw(this.ctx, cameraPerson);
+            })
+
             // draw upper image
-            this.map.drawUpperImage(this.ctx);
+            this.map.drawUpperImage(this.ctx, cameraPerson);
 
             requestAnimationFrame(() => {
              step();    

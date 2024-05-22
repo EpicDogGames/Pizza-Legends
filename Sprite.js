@@ -68,9 +68,9 @@ class Sprite {
     }
 
     // method to draw the sprite
-    draw(ctx)  {
-        const x = this.gameObject.x - 8;
-        const y = this.gameObject.y - 18;
+    draw(ctx, cameraPerson)  {
+        const x = this.gameObject.x - 8 + utils.withGrid(10.5) - cameraPerson.x;  // the 10.5 offset is based on the x length (22) and taking half
+        const y = this.gameObject.y - 18 + utils.withGrid(6) - cameraPerson.y; // the 6 offset is based on the y length(12) and taking half
 
         this.isShadowLoaded && ctx.drawImage(this.shadow, x, y);
 
