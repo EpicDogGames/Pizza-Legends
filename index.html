@@ -4,13 +4,21 @@
         <title>Pizza Legends</title>
         <link href="/styles/global.css" type="text/css" rel="stylesheet"> 
         <link href="/styles/TextMessage.css" type="text/css" rel="stylesheet">
-        <link href="/styles/SceneTransition.css" type="text/css" rel="stylesheet">    
+        <link href="/styles/SceneTransition.css" type="text/css" rel="stylesheet"> 
+        <!-- Battle css -->
+        <link href="/styles/Battle.css" type="text/css" rel="stylesheet">
+        <link href="/styles/Combatant.css" type="text/css" rel="stylesheet">
+        <link href="/styles/Team.css" type="text/css" rel="stylesheet">
+        <link href="/styles/SubmissionMenu.css" type="test/css" rel="stylesheet">  
     </head>
     <body>
         <div class="game-container">
             <!-- 16:9 -->
             <canvas class="game-canvas" width="352" height="198"></canvas>
         </div>
+
+    <!-- content -->
+    <script src="/Content/pizzas.js"></script>
 
     <!-- Scripts -->
     <script src="/utils.js"></script>
@@ -25,6 +33,13 @@
     <script src="/KeyPressListener.js"></script>
     <script src="/RevealingText.js"></script>
     <script src="/SceneTransition.js"></script>
+
+    <!-- Battle -->
+    <script src="/Battle/Battle.js"></script>
+    <script src="/Battle/Combatant.js"></script>
+    <script src="/Battle/Team.js"></script>
+    <script src="/Battle/SubmissionMenu.js"></script>
+
     <!-- as long as init is listed last shouldn't have any conflict errors with loading-->
     <script src="/init.js"></script> 
     
