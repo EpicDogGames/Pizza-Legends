@@ -18,6 +18,20 @@ class TurnCycle  {
             enemy
         })
 
+        // stop here if replacing pizza
+        if (submission.replacement)  {
+            await this.onNewEvent({
+                type: "replace",
+                replacement: submission.replacement
+            })
+            await this.onNewEvent({
+                type: "textMessage",
+                text: `Go get'em ${submission.replacement.name}!`
+            })
+            this.nextTurn();
+            return;
+        }
+
         if (submission.instanceId)  {
             this.battle.items = this.battle.items.filter(i => i.instanceId != submission.instanceId)
         }
@@ -33,6 +47,41 @@ class TurnCycle  {
                 target: submission.target,
             }
             await this.onNewEvent(event);
+        }
+
+        // did the target die
+        const targetDead = submission.target.hp <= 0;
+        if (targetDead)  {
+            await this.onNewEvent({
+                type: "textMessage", text: `${submission.target.name} was consumed!!`
+            })
+        }
+
+        // do we have a winning team
+        const winner = this.getWinningTeam();
+        if (winner)  {
+            await this.onNewEvent({
+                type: "textMessage",
+                text: "Winner!"
+            })
+            // end the battle
+            return;
+        }
+
+        // dead target, but still no winner, so bring in replacement
+        if (targetDead)  {
+            const replacement = await this.onNewEvent({
+                type: "replacementMenu",
+                team: submission.target.team
+            })
+            await this.onNewEvent({
+                type: "replace", 
+                replacement: replacement
+            })
+            await this.onNewEvent({
+                type: "textMessage",
+                text: `${replacement.name} takes over ${submission.target.name}!`
+            })
         }
 
         // check for post events
@@ -55,8 +104,24 @@ class TurnCycle  {
             await this.onNewEvent(expiredEvent);
         }
 
+        this.nextTurn();
+    }
+
+    nextTurn()  {
         this.currentTeam = this.currentTeam === "player" ? "enemy" : "player";
         this.turn();
+    }
+
+    getWinningTeam()  {
+        let aliveTeams = {};
+        Object.values(this.battle.combatants).forEach(c => {
+            if (c.hp > 0)  {
+                aliveTeams[c.team] = true;
+            }
+        })
+        if (!aliveTeams["player"]) {return "enemy" };
+        if (!aliveTeams["enemy"])  {return "player" };
+        return null;
     }
 
     async init()  {
