@@ -1,7 +1,8 @@
 class TurnCycle  {
-    constructor({battle, onNewEvent})  {
+    constructor({battle, onNewEvent, onWinner })  {
         this.battle = battle;
         this.onNewEvent = onNewEvent;
+        this.onWinner = onWinner;
         this.currentTeam = "player";
     }
 
@@ -33,6 +34,9 @@ class TurnCycle  {
         }
 
         if (submission.instanceId)  {
+            // add to list to persist to player state later
+            this.battle.usedInstanceIds[submission.instanceId] = true;
+            // remove item from battle state
             this.battle.items = this.battle.items.filter(i => i.instanceId != submission.instanceId)
         }
 
@@ -55,6 +59,22 @@ class TurnCycle  {
             await this.onNewEvent({
                 type: "textMessage", text: `${submission.target.name} was consumed!!`
             })
+
+            if (submission.target.team === "enemy")  {
+
+                const playerActivePizzaId = this.battle.activeCombatants.player;
+                const xp = submission.target.givesXp;
+
+                await this.onNewEvent({
+                    type: "textMessage",
+                    text: `Gained ${xp} XP!`
+                })
+                await this.onNewEvent({
+                    type: "giveXp",
+                    xp,
+                    combatant: this.battle.combatants[playerActivePizzaId]
+                })
+            }
         }
 
         // do we have a winning team
@@ -64,7 +84,7 @@ class TurnCycle  {
                 type: "textMessage",
                 text: "Winner!"
             })
-            // end the battle
+            this.onWinner(winner);
             return;
         }
 
@@ -125,10 +145,10 @@ class TurnCycle  {
     }
 
     async init()  {
-        //await this.onNewEvent({
-        //    type: "textMessage",
-        //    text: "The battle is starting!"
-        //})
+        await this.onNewEvent({
+            type: "textMessage",
+            text: `${this.battle.enemy.name} wants to do battle`
+        })
 
         // start the first turn
         this.turn();

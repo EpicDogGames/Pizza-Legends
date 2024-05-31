@@ -3,8 +3,6 @@ class Team {
         this.team = team;
         this.name = name;
         this.combatants = [];
-
-
     }
 
     createElement()  {
